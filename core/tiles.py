@@ -27,3 +27,51 @@ Tile Types:
     - Persuade
         - moves target and self 1 backwards
 """
+
+import abc
+from enum import IntEnum
+from typing import Optional, Tuple, Union
+
+from core.game import Player
+
+
+class TileAngle(IntEnum):
+    N = 0
+    NE = 45
+    E = 90
+    SE = 135
+    S = 180
+    SW = 225
+    W = 270
+    NW = 315
+
+
+class Tile(abc.ABC):
+    def __init__(
+        self,
+        *,
+        player: Player = None,
+        location: Tuple[int, int] = None,
+        angle: Union[TileAngle, int] = None,
+    ):
+        self.player = player
+        self.location = location
+        if isinstance(angle, int):
+            self.angle = TileAngle(angle)
+        else:
+            self.angle = angle
+
+    def __repr__(self):
+        return f"<{self.__class__.__name__}-{self.player},{self.location}>"
+
+    @abc.abstractmethod
+    def action(self):
+        pass
+
+
+class PushTile(Tile):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+
+    def action(self, target_tile):
+        pass
