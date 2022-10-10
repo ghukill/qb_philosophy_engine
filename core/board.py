@@ -2,12 +2,13 @@
 
 """
 
-from typing import Tuple
+import logging
+from typing import Tuple, Union, Hashable
 
 import pandas as pd
 
 from core.exceptions import TileNotFound, TileLocOffBoard
-from core.tiles import Tile
+from core.tiles import Tile, ProxyTile
 
 
 class Board:
@@ -23,40 +24,51 @@ class Board:
     def __str__(self):
         return str(self.matrix)
 
-    def __getitem__(self, index):
-        row, col = index
-        return self.matrix[row][col]
-
-    def __getitem__(self, key) -> Tile:
-        return self.matrix.iloc[key]
+    def __getitem__(self, loc: Tuple[int, int]):
+        """
+        return Tile by location
+        """
+        _tile = self.matrix.iloc[loc]
+        if _tile is None:
+            raise TileNotFound(f"tile not found at loc: {loc}")
+        return _tile
 
     def place_tile(self, tile, loc):
+
+        # add board tether to tile
+        tile.board = self
+
         row, col = loc
         self.matrix[row][col] = tile
 
-    def get_tile(self, loc):
-        row, col = loc
-        return self.matrix[row][col]
+    def loc(self, tile) -> Tuple[Hashable, Hashable]:
+        """
+        return (row,col) of tile via id search
+            - NOTE: this powers reflexive tile.loc()
+        """
+        if isinstance(tile, str):  # handle string id
+            tile = ProxyTile(id=tile)
+        for row_idx, row in self.matrix.iterrows():
+            for col_idx, cell in row.items():
+                if cell is not None and (cell.id == tile.id or cell.id.startswith(tile.id)):
+                    return row_idx, col_idx
+        raise TileNotFound(f"tile not found for id: '{tile.id}'")
 
-    def tile_get_target(self, loc):
-        row, col = loc
+    def move_tile(self, old_loc, new_loc):
+        pass
 
-        # get tile
-        t: Tile = self[row][col]
+    def perform_tile_actions(self, tile):
 
-        # if None, exit
-        if t is None:
-            raise TileNotFound(f"tile not found at loc: {loc}")
+        """
+        TODO: clone matrix for rollback
+        TODO: move tiles (shift matrix) depending on tile.action()
+        """
 
-        d_row, d_col = t.target_vector
-        t_row, t_col = row + d_row, col + d_col
-        if t_row < 0 or t_row >= self.width or t_col < 0 or t_col >= self.height:
-            raise TileLocOffBoard(f"target loc off board: {(t_row,t_col)}")
-        target = self[t_row][t_col]
+        # get target tile
+        target_tile = tile.get_target_tile()
 
-        return target, (t_row, t_col)
+        # if no target, do nothing!
+        if target_tile is None:
+            return None
 
-    def do_tile_actions(self, row, col):
-
-        # get tile and target
-        target = self.tile_get_target(row, col)
+        logging.info(f"INTERACTION: {tile} --> {target_tile}")
