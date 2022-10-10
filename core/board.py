@@ -3,7 +3,7 @@
 """
 
 import logging
-from typing import Tuple, Union, Hashable
+from typing import Tuple, Hashable
 
 import pandas as pd
 
@@ -115,7 +115,6 @@ class Board:
 
         """
         TODO: clone matrix for rollback
-        TODO: move tiles (shift matrix) depending on tile.action()
         """
 
         # get target tile
