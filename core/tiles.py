@@ -31,19 +31,22 @@ Tile Types:
 import abc
 from enum import IntEnum
 from typing import Optional, Tuple, Union
+import uuid
+
+from aenum import MultiValueEnum
 
 from core.game import Player
 
 
-class TileAngle(IntEnum):
-    N = 0
-    NE = 45
-    E = 90
-    SE = 135
-    S = 180
-    SW = 225
-    W = 270
-    NW = 315
+class TileAngle(MultiValueEnum):
+    N = 0, "↑"
+    NE = 45, "↗"
+    E = 90, "→"
+    SE = 135, "↘"
+    S = 180, "↓"
+    SW = 225, "↙"
+    W = 270, "←"
+    NW = 315, "↖"
 
 
 class Tile(abc.ABC):
@@ -51,18 +54,18 @@ class Tile(abc.ABC):
         self,
         *,
         player: Player = None,
-        location: Tuple[int, int] = None,
         angle: Union[TileAngle, int] = None,
+        tile_uuid: uuid.UUID = str(uuid.uuid4()),
     ):
+        self.tile_uuid = tile_uuid
         self.player = player
-        self.location = location
         if isinstance(angle, int):
             self.angle = TileAngle(angle)
         else:
             self.angle = angle
 
     def __repr__(self):
-        return f"<{self.__class__.__name__}-{self.player},{self.location}>"
+        return f"<{self.__class__.__name__}:({self.player},{self.angle.name}{self.angle.values[1]})>"
 
     @abc.abstractmethod
     def action(self):
