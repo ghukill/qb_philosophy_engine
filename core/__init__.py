@@ -11,17 +11,18 @@ logging.getLogger().setLevel(logging.INFO)
 p1 = Player("p1")
 p2 = Player("p2")
 
-# b = Board()
-#
-# b.place_tile(PushTile(player=p1, angle=TileAngle.S), (2, 0))
-# b.place_tile(PushTile(player=p2, angle=TileAngle.NW), (1, 1))
-# b.place_tile(PushTile(player=p1, angle=TileAngle.E), (0, 1))
-# b.place_tile(PushTile(player=p1, angle=TileAngle.SE), (2, 2))
-#
-# print(b)
-#
-# # get tile by loc
-# t = b[1, 0]
+b = Board()
+
+b.place_tile(PushTile(player=p1, angle=TileAngle.S), (0, 2))
+b.place_tile(PushTile(player=p1, angle=TileAngle.E), (1, 0))
+b.place_tile(PushTile(player=p2, angle=TileAngle.NW), (1, 1))
+b.place_tile(PushTile(player=p2, angle=TileAngle.W), (1, 2))
+b.place_tile(PushTile(player=p1, angle=TileAngle.SE), (2, 1))
+
+print(b)
+
+# get tile by loc
+t = b[1, 0]
 
 
 def random_board(n=5):

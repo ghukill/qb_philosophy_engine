@@ -30,6 +30,7 @@ Tile Types:
 
 import abc
 from enum import IntEnum
+import logging
 from typing import Optional, Tuple, Union
 import uuid
 
@@ -65,6 +66,9 @@ class Tile(abc.ABC):
     def __repr__(self):
         return f"<{self.__class__.__name__}:'{self.id[:6]}',({self.player},{self.angle.name}{self.angle.values[1]},{self.loc})>"
 
+    def __hash__(self):
+        return hash(self.id)
+
     @abc.abstractmethod
     def action(self, target_tile):
         pass
@@ -83,17 +87,14 @@ class Tile(abc.ABC):
 
     def get_target_tile(self):
 
-        row, col = self.loc
+        r, c = self.loc
 
-        # targeting vector
-        d_row, d_col = self.target_vector
+        # get targeting vector and calc loc
+        delta_r, delta_c = self.target_vector
+        target_r, target_c = r + delta_r, c + delta_c
 
-        # calc target loc
-        t_row, t_col = row + d_row, col + d_col
-        if t_row < 0 or t_row >= self.board.width or t_col < 0 or t_col >= self.board.height:
-            raise TileLocOffBoard(f"target loc off board: {(t_row, t_col)}")
-
-        return self.board[t_row][t_col]
+        # return tile/None from loc
+        return self.board[target_r, target_c]
 
 
 class ProxyTile(Tile):
@@ -108,5 +109,12 @@ class PushTile(Tile):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
-    def action(self, t_loc):
-        return t_loc[0] + 0, t_loc[1] + 1
+    def action(self, target_tile):
+
+        """
+        Push tile one space away
+        """
+
+        # shift tiles
+        delta = self.angle.values[2]
+        self.board.shift_tiles(target_tile, delta)
