@@ -67,8 +67,9 @@ class Tile(abc.ABC):
 
     @property
     def target_vector(self):
-        # TODO: some target differently
-        return self.angle.values[2]
+        v = self.angle.values[2]
+        # TODO: handle "long" targeting tiles by bumping +1 where appropriate
+        return v
 
 
 class PushTile(Tile):

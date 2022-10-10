@@ -6,6 +6,7 @@ from typing import Tuple
 
 import pandas as pd
 
+from core.exceptions import TileNotFound, TileLocOffBoard
 from core.tiles import Tile
 
 
@@ -45,12 +46,12 @@ class Board:
 
         # if None, exit
         if t is None:
-            raise Exception("tile not found")  # TODO: use explicit exception
+            raise TileNotFound(f"tile not found at loc: {loc}")
 
         d_row, d_col = t.target_vector
         t_row, t_col = row + d_row, col + d_col
-        if t_row < 0 or t_col < 0:
-            return Exception("target tile is off board")  # TODO: use explicit exception
+        if t_row < 0 or t_row >= self.width or t_col < 0 or t_col >= self.height:
+            raise TileLocOffBoard(f"target loc off board: {(t_row,t_col)}")
         target = self[t_row][t_col]
 
         return target, (t_row, t_col)
