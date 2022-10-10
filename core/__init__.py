@@ -1,4 +1,5 @@
 import logging
+import random
 
 from core.board import Board
 from core.tiles import Tile, PushTile, TileAngle
@@ -10,18 +11,32 @@ logging.getLogger().setLevel(logging.INFO)
 p1 = Player("p1")
 p2 = Player("p2")
 
-b = Board()
+# b = Board()
+#
+# b.place_tile(PushTile(player=p1, angle=TileAngle.S), (2, 0))
+# b.place_tile(PushTile(player=p2, angle=TileAngle.NW), (1, 1))
+# b.place_tile(PushTile(player=p1, angle=TileAngle.E), (0, 1))
+# b.place_tile(PushTile(player=p1, angle=TileAngle.SE), (2, 2))
+#
+# print(b)
+#
+# # get tile by loc
+# t = b[1, 0]
 
-b.place_tile(PushTile(player=p1, angle=TileAngle.S), (2, 0))
-b.place_tile(PushTile(player=p2, angle=TileAngle.NW), (1, 1))
-b.place_tile(PushTile(player=p1, angle=TileAngle.E), (0, 1))
-b.place_tile(PushTile(player=p1, angle=TileAngle.SE), (2, 2))
 
-print(b)
+def random_board(n=5):
+    b2 = Board(width=n, height=n)
 
-# get tile by loc
-t = b[1, 0]
-
-# get tile by loc, pass to loc by id, putting that loc back to board.... what is this relationship style?
-t = b[b.loc(b[1, 0].id)]
-print(t)
+    locs = []
+    for x in range(n):
+        if x % 2 == 0:
+            p = p1
+        else:
+            p = p2
+        loc = random.randint(0, n - 1), random.randint(0, n - 1)
+        if loc in locs:
+            continue
+        tile = PushTile(player=p, angle=list(TileAngle)[random.randint(0, 7)])
+        b2.place_tile(tile, loc)
+    print(b2)
+    return b2

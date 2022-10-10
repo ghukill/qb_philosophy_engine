@@ -12,10 +12,10 @@ from core.tiles import Tile, ProxyTile
 
 
 class Board:
-    def __init__(self):
+    def __init__(self, width=3, height=3):
 
-        self.width = 3
-        self.height = 3
+        self.width = width
+        self.height = height
         self.matrix = pd.DataFrame([[None for _row in range(self.height)] for _col in range(self.width)])
 
     def __repr__(self):
@@ -32,6 +32,13 @@ class Board:
         if _tile is None:
             raise TileNotFound(f"tile not found at loc: {loc}")
         return _tile
+
+    @property
+    def tiles(self):
+        for row_idx, row in self.matrix.iterrows():
+            for col_idx, cell in row.items():
+                if isinstance(cell, Tile):
+                    yield cell
 
     def place_tile(self, tile, loc):
 
