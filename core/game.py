@@ -9,3 +9,7 @@ class Player:
 
     def __repr__(self):
         return f"<Player:'{self.name}'>"
+
+
+class Game:
+    pass

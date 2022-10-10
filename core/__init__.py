@@ -8,6 +8,6 @@ p2 = Player("p2")
 
 b = Board()
 
-b.place_tile(PushTile(player=p1, angle=TileAngle.S), 2, 0)
-b.place_tile(PushTile(player=p2, angle=TileAngle.N), 1, 1)
-b.place_tile(PushTile(player=p1, angle=TileAngle.E), 0, 1)
+b.place_tile(PushTile(player=p1, angle=TileAngle.S), (2, 0))
+b.place_tile(PushTile(player=p2, angle=TileAngle.N), (1, 1))
+b.place_tile(PushTile(player=p1, angle=TileAngle.E), (0, 1))

@@ -39,25 +39,19 @@ from core.game import Player
 
 
 class TileAngle(MultiValueEnum):
-    N = 0, "↑"
-    NE = 45, "↗"
-    E = 90, "→"
-    SE = 135, "↘"
-    S = 180, "↓"
-    SW = 225, "↙"
-    W = 270, "←"
-    NW = 315, "↖"
+    N = 0, "↑", (-1, 0)
+    NE = 45, "↗", (-1, 1)
+    E = 90, "→", (0, 1)
+    SE = 135, "↘", (1, 1)
+    S = 180, "↓", (1, 0)
+    SW = 225, "↙", (1, -1)
+    W = 270, "←", (0, -1)
+    NW = 315, "↖", (-1, -1)
 
 
 class Tile(abc.ABC):
-    def __init__(
-        self,
-        *,
-        player: Player = None,
-        angle: Union[TileAngle, int] = None,
-        tile_uuid: uuid.UUID = str(uuid.uuid4()),
-    ):
-        self.tile_uuid = tile_uuid
+    def __init__(self, *, player: Player = None, angle: Union[TileAngle, int] = None, id=None):
+        self.id = id or str(uuid.uuid4())
         self.player = player
         if isinstance(angle, int):
             self.angle = TileAngle(angle)
@@ -65,11 +59,16 @@ class Tile(abc.ABC):
             self.angle = angle
 
     def __repr__(self):
-        return f"<{self.__class__.__name__}:({self.player},{self.angle.name}{self.angle.values[1]})>"
+        return f"<{self.__class__.__name__}:'{self.id[:6]}',({self.player},{self.angle.name}{self.angle.values[1]})>"
 
     @abc.abstractmethod
-    def action(self):
+    def action(self, target_tile):
         pass
+
+    @property
+    def target_vector(self):
+        # TODO: some target differently
+        return self.angle.values[2]
 
 
 class PushTile(Tile):
