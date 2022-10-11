@@ -15,9 +15,9 @@ b = Board()
 
 b.place_tile(PushTile(player=p1, angle=TileAngle.S), (0, 2))
 b.place_tile(PushTile(player=p1, angle=TileAngle.E), (1, 0))
-b.place_tile(PushTile(player=p2, angle=TileAngle.NW), (1, 1))
+b.place_tile(PushTile(player=p2, angle=TileAngle.N), (1, 1))
 b.place_tile(PushTile(player=p2, angle=TileAngle.W), (1, 2))
-b.place_tile(PushTile(player=p1, angle=TileAngle.SE), (2, 1))
+b.place_tile(PushTile(player=p1, angle=TileAngle.S), (2, 1))
 
 print(b)
 
@@ -37,7 +37,7 @@ def random_board(n=5):
         loc = random.randint(0, n - 1), random.randint(0, n - 1)
         if loc in locs:
             continue
-        tile = PushTile(player=p, angle=list(TileAngle)[random.randint(0, 7)])
+        tile = PushTile(player=p, angle=list(TileAngle)[random.randint(0, 3)])
         b2.place_tile(tile, loc)
     print(b2)
     return b2

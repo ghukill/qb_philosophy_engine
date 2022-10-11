@@ -39,13 +39,13 @@ from core.game import Player
 
 class TileAngle(MultiValueEnum):
     N = 0, "↑", (-1, 0)
-    NE = 45, "↗", (-1, 1)
+    # NE = 45, "↗", (-1, 1) # NOTE: removed diagnoal angle positions
     E = 90, "→", (0, 1)
-    SE = 135, "↘", (1, 1)
+    # SE = 135, "↘", (1, 1) # NOTE: removed diagnoal angle positions
     S = 180, "↓", (1, 0)
-    SW = 225, "↙", (1, -1)
+    # SW = 225, "↙", (1, -1) # NOTE: removed diagnoal angle positions
     W = 270, "←", (0, -1)
-    NW = 315, "↖", (-1, -1)
+    # NW = 315, "↖", (-1, -1) # NOTE: removed diagnoal angle positions
 
 
 class Tile(abc.ABC):
